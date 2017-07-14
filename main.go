@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 
 	gen "github.com/Trashed/go-heights/hmapgen"
 )
@@ -14,9 +13,11 @@ var (
 
 func main() {
 	flag.Parse()
-	fmt.Printf("detail: %d\n", *detail)
 
+	// Create new Terrain object and generate height map data.
 	t := gen.New(*detail)
 	t.Generate()
-	fmt.Printf("terrain data: %v\n", t.Data())
+
+	// Create height map image.
+	gen.Image(*t)
 }
