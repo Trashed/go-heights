@@ -1,7 +1,6 @@
 package hmapgen
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
 	"time"
@@ -77,21 +76,31 @@ func divide(t *Terrain, size int) {
 }
 
 func diamond(t *Terrain, x, y, size int, offset float64) {
-	fmt.Printf("== diamond ==\nterrain: %v\nx: %d, y: %d, size: %d, offset: %f\n\n", t, x, y, size, offset)
+	// fmt.Printf("== diamond ==\nterrain: %v\nx: %d, y: %d, size: %d, offset: %f\n\n", t, x, y, size, offset)
 
-	lx := t.data[x-size][y] // left
-	rx := t.data[x+size][y] // right
-	ty := t.data[x][y-size] // top
-	by := t.data[x][y+size] // bottom
+	var lx, rx, ty, by = 0.0, 0.0, 0.0, 0.0
+
+	if x-size >= 0 {
+		lx = t.data[x-size][y] // left
+	}
+	if x+size <= t.max {
+		rx = t.data[x+size][y] // right
+	}
+	if y-size >= 0 {
+		ty = t.data[x][y-size] // top
+	}
+	if y+size <= t.max {
+		by = t.data[x][y+size] // bottom
+	}
 
 	av := avg(lx, rx, ty, by)
 	t.data[x][y] = av + offset
 
-	fmt.Printf("== diamond ==\nterrain: %v\nx: %d, y: %d, size: %d, offset: %f\n\n", t, x, y, size, offset)
+	// fmt.Printf("== diamond ==\nterrain: %v\nx: %d, y: %d, size: %d, offset: %f\n\n", t, x, y, size, offset)
 }
 
 func square(t *Terrain, x, y, size int, offset float64) {
-	fmt.Printf("== square ==\nterrain: %v\nx: %d, y: %d, size: %d, offset: %f\n\n", t, x, y, size, offset)
+	// fmt.Printf("== square ==\nterrain: %v\nx: %d, y: %d, size: %d, offset: %f\n\n", t, x, y, size, offset)
 
 	a := t.data[x-size][y-size] // upper left
 	b := t.data[x+size][y-size] // upper right
@@ -101,7 +110,7 @@ func square(t *Terrain, x, y, size int, offset float64) {
 	av := avg(a, b, c, d)
 	t.data[x][y] = av + offset
 
-	fmt.Printf("== square ==\nterrain: %v\nx: %d, y: %d, size: %d, avg: %f, offset: %f\n\n", t, x, y, size, av, offset)
+	// fmt.Printf("== square ==\nterrain: %v\nx: %d, y: %d, size: %d, avg: %f, offset: %f\n\n", t, x, y, size, av, offset)
 }
 
 func avg(vals ...float64) float64 {
