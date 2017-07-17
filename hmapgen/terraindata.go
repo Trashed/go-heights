@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-const (
-	roughness = 0.9
+var (
+	roughness float64
 )
 
 // Terrain object holds the data needed for generating the height map.
@@ -19,15 +19,18 @@ type Terrain struct {
 }
 
 // New creates and returns a new Terrain object.
-func New(detail int, grayImg bool) *Terrain {
+func New(d int, grayImg bool, r float64) *Terrain {
 	t := &Terrain{}
-	t.size = int(math.Pow(2.0, float64(detail))) + 1
+	t.size = int(math.Pow(2.0, float64(d))) + 1
 	t.max = t.size - 1
 	t.data = make([][]int, t.size)
 	for i := range t.data {
 		t.data[i] = make([]int, t.size)
 	}
 	t.genGrayImage = grayImg
+
+	roughness = r
+
 	return t
 }
 

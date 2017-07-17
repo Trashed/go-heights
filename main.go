@@ -11,6 +11,7 @@ var (
         formula: 2^d+1. Default detail value is 6 => array size 65.`)
 	numOfMaps = flag.Int("amount", 1, "How many height maps you want to generate.")
 	grayImg   = flag.Bool("grayscale", false, "A simple condition whether or not to generate a grayscale image.")
+	roughness = flag.Float64("roughness", 0.9, "Determines how mountainous the map is going to be.")
 )
 
 func main() {
@@ -18,7 +19,7 @@ func main() {
 
 	// Create new Terrain object and generate height map data.
 	for i := 0; i < *numOfMaps; i++ {
-		t := gen.New(*detail, *grayImg)
+		t := gen.New(*detail, *grayImg, *roughness)
 		t.Generate()
 
 		// Create height map image.
