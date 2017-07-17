@@ -23,8 +23,8 @@ var (
 
 	hmapImage *image.RGBA
 	white     color.Color = color.RGBA{255, 255, 255, 255}
-	black     color.Color = color.RGBA{0, 0, 0, 255}
-	blue      color.Color = color.RGBA{0, 0, 255, 255}
+
+	shouldBeGray bool
 )
 
 // Image creates the height map image from the height map data in Terrain object.
@@ -32,6 +32,9 @@ func Image(t Terrain) {
 
 	width = t.size
 	height = width
+
+	// Flag for generating a gray scale image
+	shouldBeGray = t.genGrayImage
 
 	// Normalize the data
 	normalize(t.Data())
@@ -83,15 +86,19 @@ func saveImage(imageName string) {
 
 	for i := range normalizedData {
 		for j := range normalizedData[i] {
-			//			hmapImage.Set(i, j, color.RGBA{uint8(normalizedData[i][j]), 0, 0, 255})
-			switch {
-			case normalizedData[i][j] < waterLevel:
-				hmapImage.Set(i, j, color.RGBA{0, 0, uint8(normalizedData[i][j]), 255})
-			case normalizedData[i][j] >= waterLevel && normalizedData[i][j] < 170:
-				hmapImage.Set(i, j, color.RGBA{0, 255 - uint8(normalizedData[i][j]), 0, 255})
-			case normalizedData[i][j] >= 170 && normalizedData[i][j] < 220:
-				hmapImage.Set(i, j, color.RGBA{255 - uint8(normalizedData[i][j]), 220 - uint8(normalizedData[i][j]), 0, 255})
-			case normalizedData[i][j] >= 220:
+
+			if !shouldBeGray {
+				switch {
+				case normalizedData[i][j] < waterLevel:
+					hmapImage.Set(i, j, color.RGBA{0, 0, uint8(normalizedData[i][j]), 255})
+				case normalizedData[i][j] >= waterLevel && normalizedData[i][j] < 170:
+					hmapImage.Set(i, j, color.RGBA{0, 255 - uint8(normalizedData[i][j]), 0, 255})
+				case normalizedData[i][j] >= 170 && normalizedData[i][j] < 220:
+					hmapImage.Set(i, j, color.RGBA{255 - uint8(normalizedData[i][j]), 220 - uint8(normalizedData[i][j]), 0, 255})
+				case normalizedData[i][j] >= 220:
+					hmapImage.Set(i, j, color.RGBA{uint8(normalizedData[i][j]), uint8(normalizedData[i][j]), uint8(normalizedData[i][j]), 255})
+				}
+			} else {
 				hmapImage.Set(i, j, color.RGBA{uint8(normalizedData[i][j]), uint8(normalizedData[i][j]), uint8(normalizedData[i][j]), 255})
 			}
 		}

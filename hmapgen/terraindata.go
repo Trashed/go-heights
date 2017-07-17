@@ -7,18 +7,19 @@ import (
 )
 
 const (
-	roughness = 0.7
+	roughness = 0.9
 )
 
 // Terrain object holds the data needed for generating the height map.
 type Terrain struct {
-	size int
-	max  int
-	data [][]int
+	size         int
+	max          int
+	data         [][]int
+	genGrayImage bool
 }
 
 // New creates and returns a new Terrain object.
-func New(detail int) *Terrain {
+func New(detail int, grayImg bool) *Terrain {
 	t := &Terrain{}
 	t.size = int(math.Pow(2.0, float64(detail))) + 1
 	t.max = t.size - 1
@@ -26,6 +27,7 @@ func New(detail int) *Terrain {
 	for i := range t.data {
 		t.data[i] = make([]int, t.size)
 	}
+	t.genGrayImage = grayImg
 	return t
 }
 
